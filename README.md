@@ -1,4 +1,4 @@
-# echo-rs
+# gnu-echo-rs
 
 My rewrite of the echo GNU core utility in rust
 
@@ -7,11 +7,11 @@ author: [Lu Baumann](https://blog.surferlul.me/)
 
 ## usage
 
-refer to `echo-rs --help`:
+refer to `gnu-echo-rs --help`:
 
 ```
-Usage: echo-rs [SHORT-OPTION]... [STRING]...
-  or:  echo-rs LONG-OPTION
+Usage: gnu-echo-rs [SHORT-OPTION]... [STRING]...
+  or:  gnu-echo-rs LONG-OPTION
 Echo the STRING(s) to standard output. Rust rewrite of GNU echo util.
 
   -n             do not output the trailing newline
@@ -40,9 +40,9 @@ If -e is in effect, the following sequences are recognized:
 
 test script requires python >= 3.10
 
-`gnu_echo_tests/test.py -e /bin/echo -b <path/to/echo-rs>`
+`gnu_echo_tests/test.py -e /bin/echo -b <path/to/gnu-echo-rs>`
 
 | parameter        | value                                   |
 | ---------------- | --------------------------------------- |
 | `-e`, `--echo`   | path to echo executable to test against |
-| `-b`, `--binary` | path to echo-rs binary to test          |
+| `-b`, `--binary` | path to gnu-echo-rs binary to test      |

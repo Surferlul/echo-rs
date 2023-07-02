@@ -1,4 +1,4 @@
-name: echo-rs CI
+name: gnu-echo-rs CI
 
 on:
   push:
@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up echo-rs
+      - name: Set up gnu-echo-rs
         uses: actions/checkout@v2
       - name: Install cargo-audit
         run: cargo install cargo-audit
       - name: Build
         run: cargo build --verbose
       - name: test
-        run: python3 gnu_echo_tests/test.py -e /bin/echo -b target/debug/echo-rs
+        run: python3 gnu_echo_tests/test.py -e /bin/echo -b target/debug/gnu-echo-rs
       - name: Clippy
         run: cargo clippy --verbose -- -D warnings
       - name: Audit

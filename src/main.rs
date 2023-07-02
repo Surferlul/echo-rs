@@ -153,10 +153,10 @@ fn main() {
                     "--version" => {
                         match VERSION {
                             Some(v) => {
-                                println!("echo-rs {}", v)
+                                println!("gnu-echo-rs {}", v)
                             }
                             None => {
-                                println!("echo-rs was not compiled with a version")
+                                println!("gnu-echo-rs was not compiled with a version")
                             }
                         }
                         exit(0)

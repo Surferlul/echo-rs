@@ -5,8 +5,8 @@ use regex::Regex;
 
 pub const VERSION: Option<&str> = option_env!("CARGO_PKG_VERSION");
 pub const HELP_DIALOG: &str = r#"
-Usage: echo-rs [SHORT-OPTION]... [STRING]...
-  or:  echo-rs LONG-OPTION
+Usage: gnu-echo-rs [SHORT-OPTION]... [STRING]...
+  or:  gnu-echo-rs LONG-OPTION
 Echo the STRING(s) to standard output. Rust rewrite of GNU echo util.
 
   -n             do not output the trailing newline
