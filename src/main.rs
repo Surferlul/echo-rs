@@ -1,3 +1,5 @@
+//! Basic rewrite of the echo GNU core utility, maintaining compatability
+
 use std::{
     env::args,
     io::{self, Write},
@@ -8,6 +10,7 @@ mod consts;
 
 use crate::consts::{HELP_DIALOG, HEX_REGEX, OCTAL_REGEX, SIMPLE_SPECIAL_SEQUENCES, VERSION};
 
+/// Settings to be read from cli
 struct Settings {
     trailing_newline: bool,
     interpret_backslash_escapes: bool,
@@ -22,6 +25,7 @@ impl Default for Settings {
     }
 }
 
+/// Replaces escaped octal representations with corresponding characters
 fn replace_octal(string: String) -> String {
     let mut res = string;
     while let Some(captures) = OCTAL_REGEX.captures(
@@ -29,19 +33,12 @@ fn replace_octal(string: String) -> String {
         &res.clone(),
     ) {
         if let (Some(entire_match), Some(capture)) = (captures.get(0), captures.get(1)) {
-            let mut contents = capture.as_str();
-            if contents.is_empty() {
-                contents = "0" // GNU echo interprets \0 as \00
-            }
             res = format!(
-                "{}{}",
+                "{}{}{}",
                 &res[..entire_match.start()],
-                OCTAL_REGEX.replace(
-                    &res[entire_match.start()..],
-                    &u8::from_str_radix(contents, 8)
-                        .map_or_else(|_| 255 as char, |v| v as char)
-                        .to_string(),
-                )
+                &u8::from_str_radix(capture.as_str(), 8)
+                    .map_or_else(|_| 255 as char, |v| v as char),
+                &res[entire_match.end()..],
             );
         } else {
             println!("error matching octal regex. aborting");
@@ -51,29 +48,20 @@ fn replace_octal(string: String) -> String {
     res
 }
 
+/// Replaces escaped hex representations with corresponding characters
 fn replace_hex(string: String) -> String {
     let mut res = string;
-    let mut search_at = 0;
-    while let Some(captures) = HEX_REGEX.captures_at(
+    while let Some(captures) = HEX_REGEX.captures(
         #[allow(clippy::redundant_clone)]
         &res.clone(),
-        search_at,
     ) {
         if let (Some(entire_match), Some(capture)) = (captures.get(0), captures.get(1)) {
-            let contents = capture.as_str();
-            if contents.is_empty() {
-                search_at = entire_match.end();
-                continue; // GNU echo does not interpret \x
-            }
             res = format!(
-                "{}{}",
+                "{}{}{}",
                 &res[..entire_match.start()],
-                HEX_REGEX.replace(
-                    &res[entire_match.start()..],
-                    &u8::from_str_radix(contents, 16)
-                        .map_or_else(|_| 255 as char, |v| v as char)
-                        .to_string(),
-                )
+                &u8::from_str_radix(capture.as_str(), 16)
+                    .map_or_else(|_| 255 as char, |v| v as char),
+                &res[entire_match.end()..],
             );
         } else {
             println!("error matching hex regex. aborting");
@@ -83,6 +71,7 @@ fn replace_hex(string: String) -> String {
     res
 }
 
+/// Format passed argument based on settings
 fn format_arg(arg: String, settings: &mut Settings) -> String {
     if settings.interpret_backslash_escapes {
         let mut res = arg;
@@ -116,6 +105,7 @@ fn format_arg(arg: String, settings: &mut Settings) -> String {
     }
 }
 
+/// Write string to stdout as unicode characters
 fn write_as_unicode(string: String) {
     let stdout = io::stdout();
     if let Err(e) = stdout.lock().write_all(

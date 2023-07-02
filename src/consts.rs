@@ -1,3 +1,5 @@
+//! Constant values
+
 use std::process::exit;
 
 use lazy_static::lazy_static;
@@ -30,6 +32,8 @@ If -e is in effect, the following sequences are recognized:
   \0NNN   byte with octal value NNN (1 to 3 digits)
   \xHH    byte with hexadecimal value HH (1 to 2 digits)
 "#;
+
+/// Special characters, that can be replaced without further logic
 pub const SIMPLE_SPECIAL_SEQUENCES: [(&str, &str); 8] = [
     (r#"\a"#, "\x07"),
     (r#"\b"#, "\x08"),
@@ -41,6 +45,7 @@ pub const SIMPLE_SPECIAL_SEQUENCES: [(&str, &str); 8] = [
     (r#"\v"#, "\x0b"),
 ];
 lazy_static! {
+    // \NNN or \0NNN with N in octal
     pub static ref OCTAL_REGEX: Regex = Regex::new(r#"\\(?:([1-7][0-7]{0,2}|0[0-7]{0,3}))"#)
         .map_or_else(
             |e| {
@@ -52,7 +57,8 @@ lazy_static! {
             },
             |v| v
         );
-    pub static ref HEX_REGEX: Regex = Regex::new(r#"\\x([0-9A-F]{0,2})"#).map_or_else(
+    // \xFF with F in octal
+    pub static ref HEX_REGEX: Regex = Regex::new(r#"\\x([0-9A-F]{1,2})"#).map_or_else(
         |e| {
             eprintln!(
                 "programming error: cannot compile regex pattern for hex regex match: {}",
