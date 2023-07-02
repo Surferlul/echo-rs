@@ -63,6 +63,8 @@ def main() -> None:
     test_hex(echo, binary)
     test_octal_hex(echo, binary)
 
+    print("tests completed successfully")
+
 
 if __name__ == "__main__":
     main()
