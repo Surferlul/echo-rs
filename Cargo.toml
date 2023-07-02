@@ -2,6 +2,11 @@
 name = "gnu-echo-rs"
 version = "0.1.0"
 edition = "2021"
+license-file = "LICENSE"
+description = "A rewrite of the echo GNU core utility in rust"
+homepage = "https://projects.surferlul.me/gnu-echo-rs/"
+repository = "https://github.com/Surferlul/gnu-echo-rs"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
