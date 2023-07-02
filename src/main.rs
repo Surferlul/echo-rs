@@ -118,16 +118,16 @@ fn format_arg(arg: String, settings: &mut Settings) -> String {
 
 fn write_as_unicode(string: String) {
     let stdout = io::stdout();
-    stdout
-        .lock()
-        .write_all(
-            string
-                .chars()
-                .map(|c| c as u8)
-                .collect::<Vec<u8>>()
-                .as_slice(),
-        )
-        .map_or_else(|e| eprintln!("error writing to stdout: {e}"), |_| {});
+    if let Err(e) = stdout.lock().write_all(
+        string
+            .chars()
+            .map(|c| c as u8)
+            .collect::<Vec<u8>>()
+            .as_slice(),
+    ) {
+        eprintln!("error writing to stdout: {e}");
+        exit(1)
+    }
 }
 
 fn main() {
